@@ -29,7 +29,7 @@ namespace AKG
         public float rotationZAngleRad { get; set; } = 0.0f;
 
 
-        public Vector3 eye { get; set; } = new Vector3(0, 0, 1);
+        public Vector3 eye { get; set; } = new Vector3(1, 0, 0);
         public Vector3 target { get; set; } = new Vector3(0, 0, 0);
         public Vector3 up { get; set; } = Vector3.UnitY;
 

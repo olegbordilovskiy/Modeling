@@ -22,58 +22,68 @@ namespace akg_lab1
         }
         public void HandleKeyDown(object sender, KeyEventArgs e)
         {
-            if (Keyboard.Modifiers == ModifierKeys.Control)
+            switch (e.Key)
             {
-                if (e.Key == Key.Up)
-                {
-                    Model.scaleX += 0.1f;
-                    Model.scaleY += 0.1f;
-                    Model.scaleZ += 0.1f;
+                case Key.Up:
 
-                    Model.UpdateModel();
-                    View.UpdateView();
-                }
+                    if (Keyboard.Modifiers == ModifierKeys.Control)
+                    {
+                        Model.rotationXAngleRad += 0.10f;
+                    }
+                    else if (Keyboard.Modifiers == ModifierKeys.Shift)
+                    {
+                        Model.scaleX += 0.1f;
+                        Model.scaleY += 0.1f;
+                        Model.scaleZ += 0.1f;
+                    }
+                    else
+                    {
+                        Model.translationY += 10.0f;
+                    }
+                    break;
 
-                if (e.Key == Key.Down)
-                {
-                    Model.scaleX -= 0.1f;
-                    Model.scaleY -= 0.1f;
-                    Model.scaleZ -= 0.1f;
+                case Key.Down:
+                    if (Keyboard.Modifiers == ModifierKeys.Control)
+                    {
+                        Model.rotationXAngleRad -= 0.10f;
+                    }
+                    else if (Keyboard.Modifiers == ModifierKeys.Shift)
+                    {
+                        Model.scaleX -= 0.1f;
+                        Model.scaleY -= 0.1f;
+                        Model.scaleZ -= 0.1f;
+                    }
+                    else
+                    {
+                        Model.translationY -= 10.0f;
+                    }
+                    break;
 
-                    Model.UpdateModel();
-                    View.UpdateView();
-                }
+                case Key.Right:
+                    if (Keyboard.Modifiers == ModifierKeys.Control)
+                    {
+                        Model.rotationYAngleRad += 0.10f;
+                    }
+                    else
+                    {
+                        Model.translationX += 10.0f;
+                    }
+                    break;
+
+                case Key.Left:
+                    if (Keyboard.Modifiers == ModifierKeys.Control)
+                    {
+                        Model.rotationYAngleRad -= 0.10f;
+                    }
+                    else
+                    {
+                        Model.translationX -= 10.0f;
+                    }
+                    break;
             }
 
-            if (e.Key == Key.Right)
-            {
-                Model.translationX += 10.0f;
-                Model.UpdateModel();
-                View.UpdateView();
-            }
-
-            if (e.Key == Key.Left)
-            {
-                Model.translationX -= 10.0f;
-                Model.UpdateModel();
-                View.UpdateView();
-            }
-
-            if (e.Key == Key.Up)
-            {
-                Model.translationY += 5.0f;
-                Model.UpdateModel();
-                View.UpdateView();
-            }
-
-            if (e.Key == Key.Down)
-            {
-                Model.translationY -= 5.0f;
-                Model.UpdateModel();
-                View.UpdateView();
-            }
-
-
+            Model.UpdateModel();
+            View.UpdateView();
         }
     }
 }
