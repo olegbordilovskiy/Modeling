@@ -128,18 +128,16 @@ namespace AKG
 
         public static float[,] CreateViewMatrix(Vector3 eye, Vector3 target, Vector3 up)
         {
-            // Определение базисных векторов камеры
 
             Vector3 zAxis;
-            if (eye - target == Vector3.Zero) zAxis = new(1, 0, 0);
+            if (eye - target == Vector3.Zero) zAxis = new(5, 0, 0);
             else
                 zAxis = Vector3.Normalize(eye - target);
 
 
             Vector3 xAxis = Vector3.Normalize(Vector3.Cross(up, zAxis));
-            Vector3 yAxis = Vector3.Cross(zAxis, xAxis);
+            Vector3 yAxis = up;
 
-            // Составление матрицы преобразования вида
             float[,] viewMatrix = new float[,]
             {
                 { xAxis.X, xAxis.Y, xAxis.Z, -Vector3.Dot(xAxis, eye) },
@@ -169,6 +167,8 @@ namespace AKG
             return projectionMatrix;
         }
 
+
+
         public static float[,] CreateViewportMatrix(float width, float height)
         {
             float xMin = 0;
@@ -179,15 +179,16 @@ namespace AKG
             float xTranslate = (xMax + xMin) / 2.0f;
             float yTranslate = (yMax + yMin) / 2.0f;
 
-            float xScale = (xMax - xMin) / 2.0f;
-            float yScale = (yMax - yMin) / 2.0f;
+            float xScale = (xMax - xMin) / 1f;
+            float yScale = (yMax - yMin) / 1f;
 
             float[,] projectionToViewportMatrix = new float[,]
             {
-        { xScale, 0, 0, xTranslate },
-        { 0, -yScale, 0, yTranslate },
-        { 0, 0, 1, 0 },
-        { 0, 0, 0, 1 }
+                { xScale, 0, 0, xTranslate },
+                { 0, -yScale, 0, yTranslate },
+                { 0, 0, 1, 0 },
+                { 0, 0, 0, 1 }
+
             };
 
             return projectionToViewportMatrix;

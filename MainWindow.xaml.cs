@@ -26,37 +26,19 @@ namespace AKG
             Parser parser = new Parser();
             parser.ParseFile("cat.obj");
 
-
             MyModel model = new(parser.Vertices, parser.Faces);
+            model.UpdateModel();
 
-          
+            View view = new View(model, this);
+            view.UpdateView();
 
-            //DrawPoints(transformedVertices);
 
+            PreviewKeyDown += MainWindow_PreviewKeyDown;
         }
-        private void DrawPoints(List<Vector4> points)
+
+        private void MainWindow_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            foreach (Vector4 point in points)
-            {
-                DrawEllipse(point.X, point.Y, 2, 2); 
-            }
+            MessageBox.Show("test");
         }
-
-        private void DrawEllipse(float x, float y, float width, float height)
-        {
-            Ellipse ellipse = new Ellipse();
-            ellipse.Width = width;
-            ellipse.Height = height;
-            ellipse.Stroke = Brushes.White;
-            ellipse.Fill = Brushes.White;
-
-            // Устанавливаем координаты центра эллипса
-            Canvas.SetLeft(ellipse, x - width / 2);
-            Canvas.SetTop(ellipse, y - height / 2);
-
-            // Добавляем эллипс на Canvas
-            Model.Children.Add(ellipse);
-        }
-
     }
 }

@@ -44,7 +44,7 @@ namespace AKG
             float x = float.Parse(parts[i++], CultureInfo.InvariantCulture);
             float y = float.Parse(parts[i++], CultureInfo.InvariantCulture);
             float z = float.Parse(parts[i++], CultureInfo.InvariantCulture);
-            float w = 0.0f;
+            float w = 1.2f;
             Vertices.Add(new Vector4(x, y, z, w));
         }
 
@@ -54,7 +54,7 @@ namespace AKG
             for (int i = 1;  i < indeces.Length; i++)
             {
                 string[] faceIndices = parts[i].Split('/');
-                indeces[i-1] = int.Parse(faceIndices[0]); // -1 здесь было
+                indeces[i-1] = int.Parse(faceIndices[0]); // 
             }
             Faces.Add(indeces);
         }
