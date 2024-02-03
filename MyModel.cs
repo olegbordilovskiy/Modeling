@@ -10,6 +10,7 @@ namespace AKG
 {
     internal class MyModel
     {
+        public List<Vector4> SourceVertices { get; set; } = new List<Vector4>();
         public List<Vector4> Vertices { get; set; } = new List<Vector4>();
         public List<int[]> Faces { get; } = new List<int[]>();
 
@@ -36,12 +37,12 @@ namespace AKG
         public float cameraWidth { get; set; } = 800.0f;
         public float cameraHeight { get; set; } = 600.0f;
         public float nearPlane { get; set; } = 1.0f;
-        public float farPlane { get; set; } = 100000.0f;
+        public float farPlane { get; set; } = 10000.0f;
 
 
         public MyModel(List<Vector4> vertices, List<int[]> faces)
         {
-            this.Vertices = vertices;
+            this.SourceVertices = vertices;
             this.Faces = faces;
         }
 
@@ -72,28 +73,12 @@ namespace AKG
             finalMatrix = Matrix.MultiplyMatrices(finalMatrix, scaleMatrix);
 
 
+            Vertices.Clear();
 
-            List<Vector4> transformedVertices = new List<Vector4>();
-
-            foreach (Vector4 v in Vertices)
+            foreach (Vector4 v in SourceVertices)
             {
-                transformedVertices.Add(Matrix.MultiplyMatrixByVector(finalMatrix, v));
+                Vertices.Add(Matrix.MultiplyMatrixByVector(finalMatrix, v));
             }
-
-            Vertices = transformedVertices;
-
-            //for (int i = 0; i < Vertices.Count; i++)
-            //{
-            //    Vertices[i] = new Vector4(
-            //        Vertices[i].X + cameraWidth/2,
-            //        Vertices[i].Y + cameraHeight/2,
-            //        Vertices[i].Z,
-            //        Vertices[i].W
-            //    );
-            //}
-
-
-
         }
     }
 }

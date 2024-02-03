@@ -9,6 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Numerics;
+using akg_lab1;
 
 
 
@@ -32,13 +33,10 @@ namespace AKG
             View view = new View(model, this);
             view.UpdateView();
 
+            Controller controller = new Controller(this, model, view);
 
-            PreviewKeyDown += MainWindow_PreviewKeyDown;
-        }
-
-        private void MainWindow_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            MessageBox.Show("test");
+            //PreviewKeyDown += MainWindow_PreviewKeyDown;
+            PreviewKeyDown += controller.HandleKeyDown;
         }
     }
 }
