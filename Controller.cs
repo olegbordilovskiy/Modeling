@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace akg_lab1
+namespace AKG
 {
     internal class Controller
     {
@@ -32,9 +32,9 @@ namespace akg_lab1
                     }
                     else if (Keyboard.Modifiers == ModifierKeys.Shift)
                     {
-                        Model.scaleX += 0.1f;
-                        Model.scaleY += 0.1f;
-                        Model.scaleZ += 0.1f;
+                        Model.scaleX += 1.1f;
+                        Model.scaleY += 1.1f;
+                        Model.scaleZ += 1.1f;
                     }
                     else
                     {
@@ -49,9 +49,9 @@ namespace akg_lab1
                     }
                     else if (Keyboard.Modifiers == ModifierKeys.Shift)
                     {
-                        Model.scaleX -= 0.1f;
-                        Model.scaleY -= 0.1f;
-                        Model.scaleZ -= 0.1f;
+                        Model.scaleX -= 1.1f;
+                        Model.scaleY -= 1.1f;
+                        Model.scaleZ -= 1.1f;
                     }
                     else
                     {

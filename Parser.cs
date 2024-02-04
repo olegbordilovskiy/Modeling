@@ -12,13 +12,13 @@ namespace AKG
 {
     internal class Parser
     {
-        public List<Vector4> Vertices { get;} = new List<Vector4>();
-        public List<int[]> Faces { get;} = new List<int[]>();
-        
-        public void ParseFile(string filename)
-        {   
+        public List<Vector4> Vertices { get; } = new List<Vector4>();
+        public List<int[]> Faces { get; } = new List<int[]>();
 
-            using (StreamReader sr = new StreamReader(filename)) 
+        public void ParseFile(string filename)
+        {
+
+            using (StreamReader sr = new StreamReader(filename))
             {
                 string? line;
                 while ((line = sr.ReadLine()) != null)
@@ -37,7 +37,7 @@ namespace AKG
         }
 
         private void AddVertix(string[] parts)
-        {
+        {   
             int i = 1;
             while (parts[i] == "")
                 i++;
@@ -50,13 +50,20 @@ namespace AKG
 
         private void AddFace(string[] parts)
         {
-            int[] indeces = new int[parts.Length-1];
-            for (int i = 1;  i < indeces.Length; i++)
+            int[] indices = new int[(parts.Length - 1)];
+            for (int i = 1, j = 0; i < parts.Length; i++)
             {
                 string[] faceIndices = parts[i].Split('/');
-                indeces[i-1] = int.Parse(faceIndices[0]); // 
+
+                // Первое значение - вершина
+                indices[j++] = int.Parse(faceIndices[0]) - 1;
+
+                // Второе значение - текстурные координаты, пропускаем
+
+                // Третье значение - нормали
+                //indices[j++] = int.Parse(faceIndices[2]) - 1;
             }
-            Faces.Add(indeces);
+            Faces.Add(indices);
         }
     }
 }

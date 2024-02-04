@@ -12,16 +12,17 @@ namespace AKG
     {
         public List<Vector4> SourceVertices { get; set; } = new List<Vector4>();
         public List<Vector4> Vertices { get; set; } = new List<Vector4>();
-        public List<int[]> Faces { get; } = new List<int[]>();
+        public List<int[]> SourceFaces { get; } = new List<int[]>();
+        public List<Vector4[]> DDAFaces { get; set; } = new List<Vector4[]>();
 
         public float translationX { get; set; } = 0.0f;
         public float translationY { get; set; } = 0.0f;
         public float translationZ { get; set; } = 0.0f;
 
 
-        public float scaleX { get; set; } = 0.5f;
-        public float scaleY { get; set; } = 0.5f;
-        public float scaleZ { get; set; } = 0.5f;
+        public float scaleX { get; set; } = 300.5f;
+        public float scaleY { get; set; } = 300.5f;
+        public float scaleZ { get; set; } = 300.5f;
 
 
         public float rotationXAngleRad { get; set; } = 0.0f;
@@ -43,7 +44,7 @@ namespace AKG
         public MyModel(List<Vector4> vertices, List<int[]> faces)
         {
             this.SourceVertices = vertices;
-            this.Faces = faces;
+            this.SourceFaces = faces;
         }
 
         public void UpdateModel()
@@ -72,12 +73,58 @@ namespace AKG
             finalMatrix = Matrix.MultiplyMatrices(finalMatrix, translationMatrix);
             finalMatrix = Matrix.MultiplyMatrices(finalMatrix, scaleMatrix);
 
-
             Vertices.Clear();
 
             foreach (Vector4 v in SourceVertices)
             {
                 Vertices.Add(Matrix.MultiplyMatrixByVector(finalMatrix, v));
+            }
+
+            DDA();
+        }
+
+        public void DDA()
+        {
+            void Rasterization(Vector4 point1, Vector4 point2)
+            {
+                //float dx = point2.X - point1.X;
+                //float dy = point2.Y - point1.Y;
+
+                //int steps = Math.Abs((int)(dx > dy ? dx : dy));
+
+
+                //float xIncrement = dx / steps;
+                //float yIncrement = dy / steps;
+
+                //float x = point1.X;
+                //float y = point1.Y;
+
+                //Vector4[] points = new Vector4[steps];
+
+                //for (int i = 0; i < steps; i++)
+                //{
+                //    points[i] = new Vector4(x, y, 0, 0);
+                //    x += xIncrement;
+                //    y += yIncrement;
+                //}
+
+                var points = new Vector4[2];
+                points[0] = point1;
+                points[1] = point2;
+
+                DDAFaces.Add(points);
+            }
+
+            if (SourceFaces == null) return;
+            DDAFaces.Clear();
+
+            foreach (int[] face in SourceFaces)
+            {
+                for (int i = 0; i < face.Length - 1; i++)
+                {
+                    Rasterization(Vertices[face[i]], Vertices[face[i + 1]]);
+                }
+                Rasterization(Vertices[face[face.Length - 1]], Vertices[face[0]]); //??
             }
         }
     }

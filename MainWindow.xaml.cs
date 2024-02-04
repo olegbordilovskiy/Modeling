@@ -9,7 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Numerics;
-using akg_lab1;
+
 
 
 
@@ -25,7 +25,7 @@ namespace AKG
             InitializeComponent();
 
             Parser parser = new Parser();
-            parser.ParseFile("cat.obj");
+            parser.ParseFile("sc.obj");
 
             MyModel model = new(parser.Vertices, parser.Faces);
             model.UpdateModel();
@@ -35,7 +35,6 @@ namespace AKG
 
             Controller controller = new Controller(this, model, view);
 
-            //PreviewKeyDown += MainWindow_PreviewKeyDown;
             PreviewKeyDown += controller.HandleKeyDown;
         }
     }
