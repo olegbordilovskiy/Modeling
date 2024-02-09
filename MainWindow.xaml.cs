@@ -10,9 +10,6 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Numerics;
 
-
-
-
 namespace AKG
 {
     /// <summary>

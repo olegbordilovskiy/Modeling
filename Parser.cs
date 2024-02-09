@@ -29,6 +29,8 @@ namespace AKG
         }
         private void ParseLine(string line)
         {
+            line = line.Trim();
+
             string[] parts = line.Split(' ');
 
             if (parts[0] == "v") AddVertix(parts);
@@ -37,10 +39,8 @@ namespace AKG
         }
 
         private void AddVertix(string[] parts)
-        {   
+        {
             int i = 1;
-            while (parts[i] == "")
-                i++;
             float x = float.Parse(parts[i++], CultureInfo.InvariantCulture);
             float y = float.Parse(parts[i++], CultureInfo.InvariantCulture);
             float z = float.Parse(parts[i++], CultureInfo.InvariantCulture);
@@ -50,20 +50,18 @@ namespace AKG
 
         private void AddFace(string[] parts)
         {
-            int[] indices = new int[(parts.Length - 1)];
-            for (int i = 1, j = 0; i < parts.Length; i++)
+            int[] face = new int[parts.Length-1];
+            int i = 0;
+
+            foreach (string part in parts)
             {
-                string[] faceIndices = parts[i].Split('/');
-
-                // Первое значение - вершина
-                indices[j++] = int.Parse(faceIndices[0]) - 1;
-
-                // Второе значение - текстурные координаты, пропускаем
-
-                // Третье значение - нормали
-                //indices[j++] = int.Parse(faceIndices[2]) - 1;
+                if (part == "f") continue;
+                string[] verticeInd = part.Split('/');
+                face[i++] = int.Parse(verticeInd[0]) - 1;
             }
-            Faces.Add(indices);
+
+            Faces.Add(face);
+
         }
     }
 }

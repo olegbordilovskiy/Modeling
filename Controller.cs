@@ -32,9 +32,9 @@ namespace AKG
                     }
                     else if (Keyboard.Modifiers == ModifierKeys.Shift)
                     {
-                        Model.scaleX += 1.1f;
-                        Model.scaleY += 1.1f;
-                        Model.scaleZ += 1.1f;
+                        Model.scaleX += 5.0f;
+                        Model.scaleY += 5.0f;
+                        Model.scaleZ += 5.0f;
                     }
                     else
                     {
@@ -49,9 +49,9 @@ namespace AKG
                     }
                     else if (Keyboard.Modifiers == ModifierKeys.Shift)
                     {
-                        Model.scaleX -= 1.1f;
-                        Model.scaleY -= 1.1f;
-                        Model.scaleZ -= 1.1f;
+                        Model.scaleX -= 5.0f;
+                        Model.scaleY -= 5.0f;
+                        Model.scaleZ -= 5.0f;
                     }
                     else
                     {
