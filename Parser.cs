@@ -30,7 +30,7 @@ namespace AKG
         private void ParseLine(string line)
         {
             line = line.Trim();
-
+            
             string[] parts = line.Split(' ');
 
             if (parts[0] == "v") AddVertix(parts);

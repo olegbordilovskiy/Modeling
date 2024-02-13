@@ -19,9 +19,9 @@ namespace AKG
         public float translationZ { get; set; } = 0.0f;
 
 
-        public float scaleX { get; set; } = 300.5f;
-        public float scaleY { get; set; } = 300.5f;
-        public float scaleZ { get; set; } = 300.5f;
+        public float scaleX { get; set; } = 100.5f;
+        public float scaleY { get; set; } = 100.5f;
+        public float scaleZ { get; set; } = 100.5f;
 
 
         public float rotationXAngleRad { get; set; } = 0.0f;

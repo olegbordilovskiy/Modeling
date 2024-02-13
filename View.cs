@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Media.Media3D;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Windows.Media.Imaging;
 
 namespace AKG
 {
@@ -16,6 +17,9 @@ namespace AKG
     {
         MyModel Model { get; set; }
         MainWindow MainWindow { get; set; }
+        //WriteableBitmap bitmap = new WriteableBitmap(800, 600, 96, 96, PixelFormats.Bgr32, null);
+        private long Time { get; set; }
+
         public View(MyModel model, MainWindow window)
         {
             Model = model;
@@ -25,71 +29,45 @@ namespace AKG
         public void UpdateView()
         {
             MainWindow.ModelCanvas.Children.Clear();
-            DrawVertices();
-            //DrawLineGrid();
-            //DrawDDAGrid();
+            Start();
+            DrawDDAGrid();
+            DrawParameters();
         }
 
-        private void DrawVertices()
-        {
-            foreach (Vector4 point in Model.Vertices)
-            {
-                DrawPoint(point, 2);
-            }
-
-        }
-        private void DrawLineGrid()
-        {
-
-            foreach (var face in Model.SourceFaces)
-            {
-                for (int i = 0; i < face.Length - 1; i++)
-                {
-                    DrawLine(MainWindow.ModelCanvas, Model.Vertices[face[i]], Model.Vertices[face[i + 1]]);
-                }
-            }
-
-            void DrawLine(Canvas canvas, Vector4 point1, Vector4 point2)
-            {
-                Line line = new Line
-                {
-                    X1 = point1.X,
-                    Y1 = point1.Y,
-                    X2 = point2.X,
-                    Y2 = point2.Y,
-                    Stroke = Brushes.White,
-                    StrokeThickness = 0.15
-                };
-
-                canvas.Children.Add(line);
-            }
-        }
 
         private void DrawDDAGrid()
         {
             List<Vector4> DDAVertices = new List<Vector4>();
 
-            foreach (int[] face in Model.SourceFaces)
-            {
-                for (int i = 0; i < face.Length - 1; i++)
-                {
-                    Rasterization(Model.Vertices[face[i]], Model.Vertices[face[i + 1]]);
-                }
-                Rasterization(Model.Vertices[face[face.Length - 1]], Model.Vertices[face[0]]); //??
-            }
+            int height = (int)MainWindow.Height;
+            int width = (int)MainWindow.Width;
 
-            foreach (Vector4 DDAVertex in DDAVertices)
+            var pixelData = new byte[width * height * 4]; // 4 байта на каждый пиксель (BGRA)
+
+            Parallel.For(0, Model.SourceFaces.Count, i =>
             {
-                DrawPoint(DDAVertex, 2);
-            }
+                int[] face = Model.SourceFaces[i];
+                for (int j = 0; j < face.Length - 1; j++)
+                {
+                    Rasterization(Model.Vertices[face[j]], Model.Vertices[face[j + 1]]);
+                }
+                Rasterization(Model.Vertices[face[face.Length - 1]], Model.Vertices[face[0]]);
+            });
+
+            WriteableBitmap bitmap = new WriteableBitmap(width, height, 96, 96, PixelFormats.Bgra32, null);
+            Int32Rect rect = new Int32Rect(0, 0, width, height);
+            bitmap.WritePixels(rect, pixelData, width * 4, 0);
+
+            Image image = new Image();
+            image.Source = bitmap;
+            MainWindow.ModelCanvas.Children.Add(image);
 
             void Rasterization(Vector4 point1, Vector4 point2)
             {
                 float dx = point2.X - point1.X;
                 float dy = point2.Y - point1.Y;
 
-                int steps = Math.Abs((int)(dx > dy ? dx : dy))/1;
-
+                int steps = Math.Abs((int)(dx > dy ? dx : dy));
 
                 float xIncrement = dx / steps;
                 float yIncrement = dy / steps;
@@ -97,11 +75,20 @@ namespace AKG
                 float x = point1.X;
                 float y = point1.Y;
 
-
                 for (int i = 0; i < steps; i++)
                 {
-                    var vertix = new Vector4(x, y, 0, 0);
-                    DDAVertices.Add(vertix);
+                    int index = ((int)y * width + (int)x) * 4;
+
+                    if (x >= 0 && x < width && y >= 0 && y < height)
+                    {
+                        lock (pixelData)
+                        {
+                            pixelData[index + 0] = 255; 
+                            pixelData[index + 1] = 255; 
+                            pixelData[index + 2] = 255; 
+                            pixelData[index + 3] = 255; 
+                        }
+                    }
 
                     x += xIncrement;
                     y += yIncrement;
@@ -109,19 +96,26 @@ namespace AKG
             }
         }
 
-        private void DrawPoint(Vector4 point, double size)
+
+
+        private void DrawParameters()
         {
-            Ellipse ellipse = new Ellipse();
-            ellipse.Width = size;
-            ellipse.Height = size;
-            ellipse.Stroke = Brushes.White;
-            ellipse.Fill = Brushes.White;
-
-            Canvas.SetLeft(ellipse, point.X - size / 2);
-            Canvas.SetTop(ellipse, point.Y - size / 2);
-
-            MainWindow.ModelCanvas.Children.Add(ellipse);
+            MainWindow.Delay.Text = $"Delay: {TimeSpan.FromTicks(Stop()).TotalMilliseconds} ms";
+            MainWindow.Vertices.Text = $"Vertices: {Model.Vertices.Count}";
+            MainWindow.Faces.Text = $"Faces: {Model.SourceFaces.Count}";
+            
         }
 
+        public void Start()
+        {
+            Time = DateTime.Now.Ticks;
+        }
+
+        public long Stop()
+        {
+            long endTimeTicks = DateTime.Now.Ticks;
+            long elapsedTicks = endTimeTicks - Time;
+            return elapsedTicks;
+        }
     }
 }
