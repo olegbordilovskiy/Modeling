@@ -12,24 +12,24 @@ namespace AKG
     {
         public List<Vector4> SourceVertices { get; set; } = new List<Vector4>();
         public List<Vector4> Vertices { get; set; } = new List<Vector4>();
-        public List<int[]> SourceFaces { get; } = new List<int[]>();
+        public List<int[]> Faces { get; } = new List<int[]>();
 
         public float translationX { get; set; } = 0.0f;
         public float translationY { get; set; } = 0.0f;
         public float translationZ { get; set; } = 0.0f;
 
 
-        public float scaleX { get; set; } = 100.5f;
-        public float scaleY { get; set; } = 100.5f;
-        public float scaleZ { get; set; } = 100.5f;
+        public float scaleX { get; set; } = 10.5f;
+        public float scaleY { get; set; } = 10.5f;
+        public float scaleZ { get; set; } = 10.5f;
 
 
         public float rotationXAngleRad { get; set; } = 0.0f;
-        public float rotationYAngleRad { get; set; } = 1f;
+        public float rotationYAngleRad { get; set; } = 0.0f;
         public float rotationZAngleRad { get; set; } = 0.0f;
 
 
-        public Vector3 eye { get; set; } = new Vector3(1, 0, 0);
+        public Vector3 eye { get; set; } = new Vector3(0, 0, 5);
         public Vector3 target { get; set; } = new Vector3(0, 0, 0);
         public Vector3 up { get; set; } = Vector3.UnitY;
 
@@ -37,13 +37,13 @@ namespace AKG
         public float cameraWidth { get; set; } = 800.0f;
         public float cameraHeight { get; set; } = 600.0f;
         public float nearPlane { get; set; } = 1.0f;
-        public float farPlane { get; set; } = 10000.0f;
+        public float farPlane { get; set; } = 1000.0f;
 
 
         public MyModel(List<Vector4> vertices, List<int[]> faces)
         {
             this.SourceVertices = vertices;
-            this.SourceFaces = faces;
+            this.Faces = faces;
         }
 
         public void UpdateModel()
@@ -57,11 +57,13 @@ namespace AKG
             float[,] rotationZ = Matrix.CreateRotationZMatrix(rotationZAngleRad);
 
             float[,] ViewMatrix = Matrix.CreateViewMatrix(eye, target, up);
-            float[,] OrthographicProjectionMatrix = Matrix.CreateOrthographicProjectionMatrix(cameraWidth, cameraHeight, nearPlane, farPlane);
+            //float[,] OrthographicProjectionMatrix = Matrix.CreateOrthographicProjectionMatrix(cameraWidth, cameraHeight, nearPlane, farPlane);
+            float[,] PerspectiveProjectionMatrix = Matrix.CreatePerpectiveProjectionMatrix(cameraWidth, cameraHeight, nearPlane, farPlane);
 
             float[,] viewportMatrix = Matrix.CreateViewportMatrix(cameraWidth, cameraHeight);
 
-            float[,] finalMatrix = Matrix.MultiplyMatrices(viewportMatrix, OrthographicProjectionMatrix);
+            //float[,] finalMatrix = Matrix.MultiplyMatrices(viewportMatrix, OrthographicProjectionMatrix);
+            float[,] finalMatrix = Matrix.MultiplyMatrices(viewportMatrix, PerspectiveProjectionMatrix);
 
             finalMatrix = Matrix.MultiplyMatrices(finalMatrix, ViewMatrix);
 
@@ -74,10 +76,18 @@ namespace AKG
 
             Vertices.Clear();
 
+
             foreach (Vector4 v in SourceVertices)
             {
-                Vertices.Add(Matrix.MultiplyMatrixByVector(finalMatrix, v));
+                Vector4 projectedVertex = Matrix.MultiplyMatrixByVector(finalMatrix, v);
+
+                float normalizedX = projectedVertex.X / projectedVertex.W;
+                float normalizedY = projectedVertex.Y / projectedVertex.W;
+
+                Vertices.Add(new Vector4(normalizedX, normalizedY, projectedVertex.Z, projectedVertex.W));
             }
+
+
         }
     }
 }

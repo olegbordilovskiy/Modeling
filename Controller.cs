@@ -32,13 +32,13 @@ namespace AKG
                     }
                     else if (Keyboard.Modifiers == ModifierKeys.Shift)
                     {
-                        Model.scaleX += 5.0f;
-                        Model.scaleY += 5.0f;
-                        Model.scaleZ += 5.0f;
+                        Model.scaleX += 0.05f;
+                        Model.scaleY += 0.05f;
+                        Model.scaleZ += 0.05f;
                     }
                     else
                     {
-                        Model.translationY += 10.0f;
+                        Model.translationY += 0.1f;
                     }
                     break;
 
@@ -49,13 +49,13 @@ namespace AKG
                     }
                     else if (Keyboard.Modifiers == ModifierKeys.Shift)
                     {
-                        Model.scaleX -= 5.0f;
-                        Model.scaleY -= 5.0f;
-                        Model.scaleZ -= 5.0f;
+                        Model.scaleX -= 0.05f;
+                        Model.scaleY -= 0.05f;
+                        Model.scaleZ -= 0.05f;
                     }
                     else
                     {
-                        Model.translationY -= 10.0f;
+                        Model.translationY -= 0.1f;
                     }
                     break;
 
@@ -66,7 +66,7 @@ namespace AKG
                     }
                     else
                     {
-                        Model.translationX += 10.0f;
+                        Model.translationX += 0.1f;
                     }
                     break;
 
@@ -77,7 +77,7 @@ namespace AKG
                     }
                     else
                     {
-                        Model.translationX -= 10.0f;
+                        Model.translationX -= 0.1f;
                     }
                     break;
             }

@@ -30,6 +30,7 @@ namespace AKG
         private void ParseLine(string line)
         {
             line = line.Trim();
+            line = line.Replace("  ", " ");
             
             string[] parts = line.Split(' ');
 

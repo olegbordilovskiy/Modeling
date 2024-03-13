@@ -18,7 +18,7 @@ namespace AKG
             int colsB = matrixB.GetLength(1);
 
             if (colsA != rowsB)
-                throw new ArgumentException("Number of columns in matrixA must be equal to number of rows in matrixB.");
+                throw new Exception();
 
             float[,] result = new float[rowsA, colsB];
 
@@ -45,7 +45,7 @@ namespace AKG
             int vectorLength = 4;
 
             if (matrixCols != vectorLength)
-                throw new ArgumentException("Matrix column count must be equal to vector length.");
+                throw new Exception();
 
             Vector4 result = new Vector4();
 
@@ -167,6 +167,25 @@ namespace AKG
             return projectionMatrix;
         }
 
+        public static float[,] CreatePerpectiveProjectionMatrix(float width, float height, float nearPlane, float farPlane)
+        {
+            float aspect = width / height;
+            float FOV = width;
+            double tan = Math.Tan(FOV / 2);
+            float zn = nearPlane;
+            float zf = farPlane;
+
+            float[,] projectionMatrix = new float[,]
+            {
+                { 1 / (float)(aspect * tan), 0, 0, 0 },
+                { 0, 1 / (float)tan, 0, 0 },
+                { 0, 0, zf / (zn - zf), (zn*zf)/(zn-zf) },
+                { 0, 0, -1, 0 }
+            };
+
+            return projectionMatrix;
+        }
+
 
 
         public static float[,] CreateViewportMatrix(float width, float height)
@@ -193,9 +212,6 @@ namespace AKG
 
             return projectionToViewportMatrix;
         }
-
-
-
 
     }
 }

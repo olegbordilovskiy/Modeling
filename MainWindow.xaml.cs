@@ -22,7 +22,7 @@ namespace AKG
             InitializeComponent();
 
             Parser parser = new Parser();
-            parser.ParseFile("ship.obj");
+            parser.ParseFile("man.obj");
 
             MyModel model = new(parser.Vertices, parser.Faces);
             model.UpdateModel();
